@@ -17,7 +17,10 @@ class TextCNN(object):
             self.W = tf.Variable(
                 tf.random_uniform([vocab_size, embedding_size], -1.0, 1.0),
                 name="W")
+            # self.input_x维度 : 1066 * 56
+            # self.embedded_chars维度 ：1066 * 56 * 128
             self.embedded_chars = tf.nn.embedding_lookup(self.W, self.input_x)
+            # self.embedded_chars_expanded维度 ：1066 * 56 * 128 * 1
             self.embedded_chars_expanded = tf.expand_dims(self.embedded_chars, -1)
 
         pooled_outputs = []
@@ -33,6 +36,7 @@ class TextCNN(object):
                     strides=[1, 1, 1, 1],
                     padding="VALID",
                     name="conv")
+                # conv维度：1066 * 54 * 1 * 128
                 # Apply nonlinearity
                 h = tf.nn.relu(tf.nn.bias_add(conv, b), name="relu")
                 '''
@@ -40,6 +44,8 @@ class TextCNN(object):
                 sequence_length - filter_size + 1 : 卷积层输出长度
                                                     句子的长度减去选中单词的大小 + 1
                 '''
+                
+                # pooled : 1066 * 1 * 1 * 128
                 pooled = tf.nn.max_pool( 
                     h,
                     ksize=[1, sequence_length - filter_size + 1, 1, 1],
@@ -47,6 +53,7 @@ class TextCNN(object):
                     padding='VALID',
                     name="pool")
                 pooled_outputs.append(pooled)
+
 
         # Combine all the pooled features
         '''
@@ -59,7 +66,6 @@ class TextCNN(object):
 
         num_filters_total = num_filters * len(filter_sizes)
         self.h_pool = tf.concat(pooled_outputs, 3)
-        print (self.h_pool); time.sleep(100)
         self.h_pool_flat = tf.reshape(self.h_pool, [-1, num_filters_total])
 
         # Add dropout
