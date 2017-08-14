@@ -108,6 +108,7 @@ with tf.Graph().as_default():
         optimizer = tf.train.AdamOptimizer(1e-3)
         grads_and_vars = optimizer.compute_gradients(cnn.loss)
         train_op = optimizer.apply_gradients(grads_and_vars, global_step=global_step)
+        # 上面两句话加起来等于ｍｉｎｉｍｉｚｅ
 
         # Checkpoint directory. Tensorflow assumes this directory already exists so we need to create it
         timestamp = str(int(time.time()))

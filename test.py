@@ -1,25 +1,26 @@
 import tensorflow as tf
+import numpy as np
+import time
 
-a = tf.placeholder(tf.float32)
-b = tf.placeholder(tf.float32)
-c = tf.add(a, b)
+class App(object):
+    def __init__(self, sequence_length, num_classes):
 
-sess = tf.Session()
-with sess.as_default():
-    sess.run(tf.global_variables_initializer())
-    test = sess.run(c, feed_dict = {a : [1, 2, 34], b : [1, 2, 3]})
-    print (test)
-    print (type(test))
-    sess.close()
+        self.input_x = tf.placeholder(tf.int32, [None, sequence_length], name="input_x")
+        self.input_y = tf.placeholder(tf.float32, [None, num_classes], name="input_y")
+        self.dropout_keep_prob = tf.placeholder(tf.float32, name="dropout_keep_prob")
+        self.W = tf.Variable(
+            tf.random_uniform([10, 10], -1.0, 1.0),
+            name="W")
+        self.embedded_chars = tf.nn.embedding_lookup(self.W, self.input_x)
 
-Sess = tf.Session()
-with Sess.as_default():
-    # Sess.run(tf.global_variables_initializer())
-    test = Sess.run(c, feed_dict = {a : [1, 2, 34], b : [1, 2, 3]})
-    print (test)
-    print (type(test))
-    print (tf.get_default_session())
-    Sess.close()
+        print (self.input_x)
+        print (self.input_y)
+        print (self.W)
+        print (self.embedded_chars)
 
-print (Sess)
-print (sess)
+
+        
+
+
+if __name__ == "__main__":
+    app = App(4, 5)
