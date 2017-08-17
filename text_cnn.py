@@ -4,7 +4,7 @@ import time
 
 class TextCNN(object):
     def __init__(self, sequence_length, num_classes, vocab_size,
-          embedding_size, filter_sizes, num_filters, l2_reg_lambda=0.0):
+          embedding_size, filter_sizes, num_filters, l2_reg_lambda=0.5):
 
         self.input_x = tf.placeholder(tf.int32, [None, sequence_length], name="input_x")
         self.input_y = tf.placeholder(tf.float32, [None, num_classes], name="input_y")
@@ -77,7 +77,7 @@ class TextCNN(object):
             W = tf.get_variable(
                 "W",
                 shape=[num_filters_total, num_classes],
-                initializer=tf.contrib.layers.xavier_initializer())
+                initializer=tf.contrib.layer.xavier_initializer())
             b = tf.Variable(tf.constant(0.1, shape=[num_classes]), name="b")
             l2_loss += tf.nn.l2_loss(W)
             l2_loss += tf.nn.l2_loss(b)
